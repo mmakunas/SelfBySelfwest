@@ -15,14 +15,13 @@ Meteor.startup(function () {
     var topTweets = new Object();
 
     var saveTopTweet = function (id, tweet) {
-        TopTweets.upsert({_id: id}, {
-            _id: id,
-            name: tweet.user.name,
-            score: tweet.retweet_count
-        });
+        TopTweets.update(id,
+        {"$set":{"name":tweet.user.name}}, {upsert: true});
 
-        TopTweets.update({_id: id},
-            { $inc: { score: Math.floor(Random.fraction() * 10) * 5 } });
+        console.log("incrementing...: " + id);
+        TopTweets.update({_id: id}, { "$inc" : { "score" : Math.floor(Random.fraction() * 10) * Math.floor(Random.fraction() * 10) } });
+
+
     }
 
 
@@ -46,7 +45,7 @@ Meteor.startup(function () {
 
 
         });
-    }, 30000)
+    }, 15000)
 
 
 
