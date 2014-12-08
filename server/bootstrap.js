@@ -16,13 +16,14 @@ Meteor.startup(function () {
 
     var saveTopTweet = function (id, tweet) {
         TopTweets.update(id,
-        {"$set":{"name":tweet.user.screen_name}}, {upsert: true});
-        TopTweets.update({_id: id}, { "$inc" : { "score" : Math.floor(Random.fraction() * 10) * Math.floor(Random.fraction() * 10) } });
+        {"$set":{"name":tweet.user.screen_name, "score": tweet.retweet_count}}, {upsert: true});
+        //TopTweets.update({_id: id}, { "$inc" : { "score" : Math.floor(Random.fraction() * 10) * Math.floor(Random.fraction() * 10) } });
 
     }
 
-
-    var names = ["540974974430105601", "540905471029567489", "540893751108177920"];
+    var result = Meteor.http.get('http://user.flux.com/api/v1/user/mzid/1/maciek/xdata/tweets');
+    var names= JSON.parse(result.content)
+    //var names = ["540974974430105601", "540905471029567489", "540893751108177920"];
 
     Meteor.setInterval(function (name) {
         console.log("updating top tweets")
@@ -43,7 +44,7 @@ Meteor.startup(function () {
 
 
         });
-    }, 15000)
+    }, 5000)
 
    // Twit.get('statuses/oembed.json?:id', { id: 540974974430105601 }, function (err, data, response) {
    //     console.log(data);
